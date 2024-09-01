@@ -6,11 +6,14 @@ import userRoute from "./routes/userRoute.js";
 import messageRoute from "./routes/messageRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
 import { app,server } from "./socket/socket.js";
 dotenv.config({});
 
  
 const PORT = process.env.PORT || 5000;
+
+const __dirname = path.resolve();
 
 // middleware
 app.use(express.urlencoded({extended:true}));
@@ -21,6 +24,12 @@ const corsOption={
     credentials:true
 };
 app.use(cors(corsOption)); 
+
+
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.get("*", (req,res)=>{
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+})
 
 
 // routes
